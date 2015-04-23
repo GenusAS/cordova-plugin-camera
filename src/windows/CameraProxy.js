@@ -67,39 +67,57 @@ function resizeImage(successCallback, errorCallback, file, targetWidth, targetHe
     file.copyAsync(storageFolder, file.name, Windows.Storage.NameCollisionOption.replaceExisting)
         .then(function (storageFile) { return Windows.Storage.FileIO.readBufferAsync(storageFile); })
         .then(function(buffer) {
-            var strBase64 = Windows.Security.Cryptography.CryptographicBuffer.encodeToBase64String(buffer);
-            var imageData = "data:" + file.contentType + ";base64," + strBase64;
-            var image = new Image();
-            image.src = imageData;
-            image.onload = function() {
-                var imageWidth = targetWidth,
-                    imageHeight = targetHeight;
-                var canvas = document.createElement('canvas');
-                var storageFileName;
+            file.properties.getImagePropertiesAsync().done(
+                function (imageProperties) {
 
-                canvas.width = imageWidth;
-                canvas.height = imageHeight;
+                    var strBase64 = Windows.Security.Cryptography.CryptographicBuffer.encodeToBase64String(buffer);
 
-                canvas.getContext("2d").drawImage(this, 0, 0, imageWidth, imageHeight);
+                    var originalHeight = imageProperties.height;
+                    var originalWidth = imageProperties.width;
+                    var aspectRatio, imageHeight, imageWidth;
 
-                var fileContent = canvas.toDataURL(file.contentType).split(',')[1];
+                    if (originalWidth > originalHeight) {
+                        aspectRatio = originalWidth / targetWidth;
+                        imageWidth = targetWidth;
+                        imageHeight = originalHeight / aspectRatio;
+                    } else {
+                        aspectRatio = originalHeight / targetHeight;
+                        imageHeight = targetHeight;
+                        imageWidth = originalWidth / aspectRatio;
+                    }
 
-                var storageFolder = Windows.Storage.ApplicationData.current.localFolder;
+                    var imageData = "data:" + file.contentType + ";base64," + strBase64;
+                    var image = new Image();
+                    image.src = imageData;
+                    image.onload = function() {
+                      
+                        var canvas = document.createElement('canvas');
 
-                storageFolder.createFileAsync(tempPhotoFileName, Windows.Storage.CreationCollisionOption.generateUniqueName)
-                    .then(function (storagefile) {
-                        var content = Windows.Security.Cryptography.CryptographicBuffer.decodeFromBase64String(fileContent);
-                        storageFileName = storagefile.name;
-                        return Windows.Storage.FileIO.writeBufferAsync(storagefile, content);
-                    })
-                    .done(function () {
-                        successCallback("ms-appdata:///local/" + storageFileName);
-                    }, errorCallback);
-            };
-        })
-        .done(null, function(err) {
-            errorCallback(err);
-        }
+                        canvas.width = imageWidth;
+                        canvas.height = imageHeight;
+
+                        canvas.getContext("2d").drawImage(this, 0, 0, imageWidth, imageHeight);
+
+                        var fileContent = canvas.toDataURL(file.contentType).split(',')[1];
+
+                        var storageFolder = Windows.Storage.ApplicationData.current.localFolder;
+
+                        storageFolder.createFileAsync(tempPhotoFileName, Windows.Storage.CreationCollisionOption.generateUniqueName).done(function (storagefile) {
+                            var content = Windows.Security.Cryptography.CryptographicBuffer.decodeFromBase64String(fileContent);
+                            Windows.Storage.FileIO.writeBufferAsync(storagefile, content).then(function () {
+                                successCallback("ms-appdata:///local/" + storagefile.name);
+                            }, function () {
+                                errorCallback("Resize picture error.");
+                            });
+                        });
+                    };
+                }, function (err) {
+                    console.log(err);
+                });
+            });
+        }, function () {
+            errorCallback("Can't access localStorage folder");
+        });
     );
 }
 
