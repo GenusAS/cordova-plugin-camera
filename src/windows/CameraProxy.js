@@ -57,10 +57,11 @@ module.exports = {
 // Resize method
 function resizeImage(successCallback, errorCallback, file, targetWidth, targetHeight, encodingType) {
     var tempPhotoFileName = "";
+    var dateTime = moment().format('DD.MM.YY_HH.mm.ss');
     if (encodingType == Camera.EncodingType.PNG) {
-        tempPhotoFileName = "camera_cordova_temp_return.png";
+        tempPhotoFileName = "picture" + dateTime + ".png";
     } else {
-        tempPhotoFileName = "camera_cordova_temp_return.jpg";
+        tempPhotoFileName = "picture" + dateTime + ".jpg";
     }
 
     var storageFolder = Windows.Storage.ApplicationData.current.localFolder;
