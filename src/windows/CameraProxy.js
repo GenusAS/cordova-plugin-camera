@@ -66,8 +66,13 @@ function resizeImage(successCallback, errorCallback, file, targetWidth, targetHe
 
     var storageFolder = Windows.Storage.ApplicationData.current.localFolder;
     file.copyAsync(storageFolder, file.name, Windows.Storage.NameCollisionOption.replaceExisting)
-        .then(function (storageFile) { return Windows.Storage.FileIO.readBufferAsync(storageFile); })
-        .then(function(buffer) {
+    .then(
+        function (storageFile) { 
+            return Windows.Storage.FileIO.readBufferAsync(storageFile); 
+        }
+    )
+    .then(
+        function(buffer) {
             file.properties.getImagePropertiesAsync().done(
                 function (imageProperties) {
 
@@ -103,23 +108,27 @@ function resizeImage(successCallback, errorCallback, file, targetWidth, targetHe
 
                         var storageFolder = Windows.Storage.ApplicationData.current.localFolder;
 
-                        storageFolder.createFileAsync(tempPhotoFileName, Windows.Storage.CreationCollisionOption.generateUniqueName).done(function (storagefile) {
-                            var content = Windows.Security.Cryptography.CryptographicBuffer.decodeFromBase64String(fileContent);
-                            Windows.Storage.FileIO.writeBufferAsync(storagefile, content).then(function () {
-                                successCallback("ms-appdata:///local/" + storagefile.name);
-                            }, function () {
-                                errorCallback("Resize picture error.");
-                            });
-                        });
+                        storageFolder.createFileAsync(tempPhotoFileName, Windows.Storage.CreationCollisionOption.generateUniqueName).done(
+                            function (storagefile) {
+                                var content = Windows.Security.Cryptography.CryptographicBuffer.decodeFromBase64String(fileContent);
+                                Windows.Storage.FileIO.writeBufferAsync(storagefile, content).then(function () {
+                                    successCallback("ms-appdata:///local/" + storagefile.name);
+                                }, function () {
+                                    errorCallback("Resize picture error.");
+                                }
+                            );
+                            }
+                        );
                     };
                 }, function (err) {
                     console.log(err);
-                });
-            });
-        }, function () {
-            errorCallback("Can't access localStorage folder");
-        });
-    );
+                }
+            );
+        }
+    )
+    .done(null, function(err) {
+        errorCallback(err);
+    }   
 }
 
 // Because of asynchronous method, so let the successCallback be called in it.
