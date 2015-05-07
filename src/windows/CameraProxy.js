@@ -126,9 +126,11 @@ function resizeImage(successCallback, errorCallback, file, targetWidth, targetHe
             );
         }
     )
-    .done(null, function(err) {
-        errorCallback(err);
-    }   
+    .done(null, 
+        function(err) {
+            errorCallback(err);
+        }
+    )   
 }
 
 // Because of asynchronous method, so let the successCallback be called in it.
