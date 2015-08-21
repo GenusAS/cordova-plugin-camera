@@ -147,3 +147,53 @@
 * Renamed test dir, added nested plugin.xml
 * CB-6958 added manual tests
 * CB-6958 Port camera tests to plugin-test-framework
+
+### 0.3.3 (Oct 03, 2014)
+* CB-7600 Adds informative message to error callback in manual test.
+
+### 0.3.4 (Dec 02, 2014)
+* CB-7977 Mention `deviceready` in plugin docs
+* CB-7979 Each plugin doc should have a ## Installation section
+* Fix memory leak of image data in `imagePickerControllerReturnImageResult`
+* Pass uri to crop instead of pulling the low resolution image out of the intent return (close #43)
+* Add orientation support for PNG to Android (closes #45)
+* CB-7700 cordova-plugin-camera documentation translation: cordova-plugin-camera
+
+### 0.3.5 (Feb 04, 2015)
+* CB-8351 ios: Stop using now-deprecated [NSData base64EncodedString]
+* CB-8351 ios: Stop using now-deprecated integerValueForKey: class extension
+* CB-8351 ios: Use argumentForIndex rather than NSArray extension
+* CB-8032 ios: Add nativeURL external method support for CDVFileSystem->makeEntryForPath:isDirectory:
+* CB-7938 ios: Added XCTest unit tests project, with stubs (adapted from SplashScreen unit test setup)
+* CB-7937 ios: Re-factor iOS Camera plugin so that it is testable
+
+### 0.3.6 (Mar 10, 2015)
+* Fix localize key for Videos. This closes #58
+* CB-8235 android: Fix crash when selecting images from DropBox with spaces in path (close #65)
+* add try ... catch for getting image orientation
+* CB-8599 fix threading issue with cameraPicker (fixes #72)
+* CB-8559 Integrate TravisCI
+* CB-8438 cordova-plugin-camera documentation translation: cordova-plugin-camera
+* CB-8538 Added package.json file
+
+### 1.0.0 (Apr 15, 2015)
+* CB-8780 - Display popover using main thread. Fixes popover slowness (closes #81)
+* CB-8746 bumped version of file dependency
+* CB-8746 gave plugin major version bump
+* CB-8707 refactoring windows code to improve readability
+* CB-8706 use filePicker if saveToPhotoAlbum is true
+* CB-8706 remove unnecessary capabilities from xml
+* CB-8747 updated dependency, added peer dependency
+* CB-8683 updated blackberry specific references of org.apache.cordova.camera to cordova-plugin-camera
+* CB-8782: Updated the docs to talk about the allowEdit quirks, it's not 100% working, but better than it was
+* CB-8782: Fixed the flow so that we save the cropped image and use it, not the original non-cropped.  Crop only supports G+ Photos Crop, other crops may not work, depending on the OEM
+* CB-8740: Removing FileHelper call that was failing on Samsung Galaxy S3, now that we have a real path, we only need to update the MediaStore, not pull from it in this case
+* CB-8740: Partial fix for Save Image to Gallery error found in MobileSpec
+* CB-8683 changed plugin-id to pacakge-name
+* CB-8653 properly updated translated docs to use new id
+* CB-8653 updated translated docs to use new id
+* CB-8351 Fix custom implementation of integerValueForKey (close #79)
+* Fix cordova-paramedic path change, build with TRAVIS_BUILD_DIR, use npm to install paramedic
+* docs: added 'Windows' to supported platforms
+* CB-8653 Updated Readme
+* CB-8659: ios: 4.0.x Compatibility: Remove use of deprecated headers
