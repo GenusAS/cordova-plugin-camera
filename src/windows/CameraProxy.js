@@ -76,11 +76,14 @@ var DEFAULT_ASPECT_RATIO = '1.8';
 // Resize method
 function resizeImage(successCallback, errorCallback, file, targetWidth, targetHeight, encodingType) {
     var tempPhotoFileName = "";
-    var dateTime = moment().format('DD.MM.YY_HH.mm.ss');
+  
+    var date = new Date();
+    var dateTimeString = [date.getDate(), date.getMonth() + 1, date.getFullYear()].join(".") + "_" + [date.getHours(), date.getMinutes(), date.getSeconds()].join(".");
+ 
     if (encodingType == Camera.EncodingType.PNG) {
-        tempPhotoFileName = "picture" + dateTime + ".png";
+        tempPhotoFileName = "picture" + dateTimeString + ".png";
     } else {
-        tempPhotoFileName = "picture" + dateTime + ".jpg";
+        tempPhotoFileName = "picture" + dateTimeString + ".jpg";
     }
 
     var storageFolder = getAppData().localFolder;
@@ -132,7 +135,7 @@ function resizeImage(successCallback, errorCallback, file, targetWidth, targetHe
                             var content = Windows.Security.Cryptography.CryptographicBuffer.decodeFromBase64String(fileContent);
                            
                             Windows.Storage.FileIO.writeBufferAsync(storagefile, content).then(function () {
-                                
+
                                 successCallback("ms-appdata:///local/" + storagefile.name);
                             }, function () {
                                 errorCallback("Resize picture error.");
