@@ -125,19 +125,19 @@ function resizeImage(successCallback, errorCallback, file, targetWidth, targetHe
 
                         var fileContent = canvas.toDataURL(file.contentType).split(',')[1];
 
-                var storageFolder = getAppData().localFolder;
+                    var storageFolder = getAppData().localFolder;
 
-                storageFolder.createFileAsync(tempPhotoFileName, OptUnique)
-                            function (storagefile) {
-                                var content = Windows.Security.Cryptography.CryptographicBuffer.decodeFromBase64String(fileContent);
-                                Windows.Storage.FileIO.writeBufferAsync(storagefile, content).then(function () {
-                                    successCallback("ms-appdata:///local/" + storagefile.name);
-                                }, function () {
-                                    errorCallback("Resize picture error.");
-                                }
-                            );
-                            }
-                        );
+                    storageFolder.createFileAsync(tempPhotoFileName, OptUnique)
+                        .then(function (storagefile) {
+                            var content = Windows.Security.Cryptography.CryptographicBuffer.decodeFromBase64String(fileContent);
+                           
+                            Windows.Storage.FileIO.writeBufferAsync(storagefile, content).then(function () {
+                                
+                                successCallback("ms-appdata:///local/" + storagefile.name);
+                            }, function () {
+                                errorCallback("Resize picture error.");
+                            });
+                        });
                     };
                 }, function (err) {
                     console.log(err);
